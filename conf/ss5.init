@@ -6,7 +6,7 @@
 #
 
 OS=`uname -s`
-if [ $OS = "Linux" ] || [ $OS = "SunOS" ]; then
+if [ "$OS" = "Linux" ] || [ "$OS" = "SunOS" ]; then
  
 # Source function library.
  . /etc/rc.d/init.d/functions
@@ -15,7 +15,7 @@ if [ $OS = "Linux" ] || [ $OS = "SunOS" ]; then
  . /etc/sysconfig/network
 
 # Check that networking is up.
- [ ${NETWORKING} = "no" ] && exit 0
+ [ "${NETWORKING}" = "no" ] && exit 0
 
  [ -f /usr/sbin/ss5 ] || exit 0
 fi
@@ -28,11 +28,12 @@ case "$1" in
   start)
         # Start daemon.
         echo -n "Starting ss5... "
-	if [ $OS = "Linux" ]; then
+        mkdir -p /var/run/ss5
+	if [ "$OS" = "Linux" ]; then
             daemon /usr/sbin/ss5 -t $SS5_OPTS
             touch /var/lock/subsys/ss5
 	else
-	  if [ $OS = "SunOS" ]; then
+	  if [ "$OS" = "SunOS" ]; then
               /usr/sbin/ss5 -t 
               touch /var/lock/subsys/ss5
 	  else
@@ -44,18 +45,19 @@ case "$1" in
   stop)
         # Stop daemon.
         echo "Shutting down ss5... "
-	if [ $OS = "Linux" ] || [ $OS = "SunOS" ]; then
+	if [ "$OS" = "Linux" ] || [ "$OS" = "SunOS" ]; then
 	killproc ss5
         rm -f /var/lock/subsys/ss5
 	else
 		killall ss5
 	fi
         rm -f /var/run/ss5/ss5.pid
+        rm -rf /var/run/ss5
 	echo "done"
         ;;
   reload)
         # Reload configuration
-	if [ $OS = "Linux" ] || [ $OS = "SunOS" ]; then
+	if [ "$OS" = "Linux" ] || [ "$OS" = "SunOS" ]; then
         echo -n "Reloading ss5... "
 	killproc ss5 -1
 	else
@@ -70,7 +72,7 @@ case "$1" in
 	$0 start
 	;;
   status)
-	if [ $OS = "Linux" ] || [ $OS = "SunOS" ]; then
+	if [ "$OS" = "Linux" ] || [ "$OS" = "SunOS" ]; then
 	  status ss5
 	fi
 	;;
