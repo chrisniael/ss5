@@ -40,6 +40,7 @@ INT main(int argc, char **argv, char **envp)
     UINT newChildren   = 0;
     UINT forkChildren  = OK;
     UINT mode          = LOAD_CONFIG;
+    bool daemonMode    = true;
 
     int count;
     int status;
@@ -121,6 +122,7 @@ INT main(int argc, char **argv, char **envp)
           case 'c':   mode = PARSE_CONFIG;        break;    /*    Parse configuration file for syntax check    */
           case 'm':   SS5SocksOpt.Mute = OK;      break;    /*    Disable logging                              */
           case 's':   SS5SocksOpt.Syslog = OK;    break;    /*    Eneable logging to syslog instead of file    */
+          case 't':   daemonMode = false;         break;    /*    Disable daemon mode    */
           case 'v':
             fprintf(stderr,"[INFO] %s\n",SS5_VERSION);
 	    fprintf(stderr,"[INFO] %s\n",SS5_COPYRIGHT);
@@ -221,8 +223,10 @@ INT main(int argc, char **argv, char **envp)
      *    Start socks server in daemon mode
      */
     if( mode == LOAD_CONFIG ) {
-      if( !S5MakeDaemon() )
-        S5ServerClose(EXIT);
+      if( daemonMode ) {
+        if( !S5MakeDaemon() )
+          S5ServerClose(EXIT);
+      }
     }
     else {
       if( !S5LoadConfig(PARSE_CONFIG) )
