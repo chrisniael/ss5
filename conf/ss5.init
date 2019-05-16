@@ -30,14 +30,14 @@ case "$1" in
         echo -n "Starting ss5... "
         mkdir -p /var/run/ss5
 	if [ "$OS" = "Linux" ]; then
-            daemon /usr/sbin/ss5 -t $SS5_OPTS
+            daemon /usr/sbin/ss5 -d -t $SS5_OPTS
             touch /var/lock/subsys/ss5
 	else
 	  if [ "$OS" = "SunOS" ]; then
-              /usr/sbin/ss5 -t 
+              /usr/sbin/ss5 -d -t 
               touch /var/lock/subsys/ss5
 	  else
-              /usr/local/sbin/ss5 -t 
+              /usr/local/sbin/ss5 -d -t 
 	  fi
 	fi
 	echo "done"
